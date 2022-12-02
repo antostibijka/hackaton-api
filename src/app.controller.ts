@@ -4,8 +4,9 @@ import { LoginUserDto } from "./dtos/login-user.dto";
 import { RegisterUserDto } from "./dtos/register-user.dto";
 import { Response } from 'express';
 import { AddFavouriteDto } from "./dtos/add-favourite.dto";
+import { ApiTags } from "@nestjs/swagger";
 
-
+@ApiTags('api')
 @Controller("/api")
 export class AppController {
   constructor(private readonly appService: AppService) {}
