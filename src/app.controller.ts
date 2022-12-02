@@ -5,6 +5,7 @@ import { RegisterUserDto } from "./dtos/register-user.dto";
 import { Response } from 'express';
 import { AddFavouriteDto } from "./dtos/add-favourite.dto";
 
+
 @Controller("/api")
 export class AppController {
   constructor(private readonly appService: AppService) {}
