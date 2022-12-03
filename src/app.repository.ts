@@ -10,7 +10,7 @@ export class AppRepository {
 
   async userLogin(loginUserDto: LoginUserDto)
   {
-    const data = await this.prismaService.users.findFirst({
+    return await this.prismaService.users.findFirst({
       where: {
         username: loginUserDto.username
       },
@@ -20,14 +20,6 @@ export class AppRepository {
         isActive: true
       }
     });
-    if (!data) {
-      throw new NotFoundException('Wrong username or password!');
-    }
-    if (data.isActive == false) {
-      throw new UnauthorizedException('User account is not active!');
-    }
-
-    return { data, status: 'success' };
   }
 
   async isRegistered(registerUserDto: RegisterUserDto)

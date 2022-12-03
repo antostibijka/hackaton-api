@@ -1,4 +1,4 @@
-import { Body, Injectable, UnauthorizedException } from "@nestjs/common";
+import { Body, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { LoginUserDto } from "./dtos/login-user.dto";
 import { AppRepository } from "./app.repository";
 import { RegisterUserDto } from "./dtos/register-user.dto";
@@ -12,8 +12,14 @@ export class AppService {
 
   async userLogin(loginUserDto: LoginUserDto) {
     const data = await this.appRepository.userLogin(loginUserDto);
-    delete data.data.isActive;
-    return data;
+    if (!data) {
+      throw new NotFoundException('Wrong username or password!');
+    }
+    if (data.isActive == false) {
+      throw new UnauthorizedException('User account is not active!');
+    }
+    delete data.isActive;
+    return { data, status: 'success' };
   }
 
   async userRegister(registerUserDto: RegisterUserDto) {
