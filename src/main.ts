@@ -10,7 +10,7 @@ async function bootstrap() {
     .setTitle('Silevis Hackaton - API')
     .setDescription('Swagger documantation for Silevis Hackaton API.')
     .setVersion('1.0')
-    .addTag('api')
+    .addTag('API')
     .build()
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

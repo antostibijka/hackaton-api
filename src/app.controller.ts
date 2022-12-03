@@ -4,13 +4,14 @@ import { LoginUserDto } from "./dtos/login-user.dto";
 import { RegisterUserDto } from "./dtos/register-user.dto";
 import { Response } from 'express';
 import { AddFavouriteDto } from "./dtos/add-favourite.dto";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiOperation, ApiTags } from "@nestjs/swagger";
 
-@ApiTags('api')
 @Controller("/api")
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
+  @ApiTags('User')
+  @ApiOperation({ description: 'User login'})
   @Post('/login')
   async userLogin(
     @Body() loginUserDto: LoginUserDto,
@@ -21,30 +22,40 @@ export class AppController {
     return data;
   }
 
+  @ApiTags('User')
+  @ApiOperation({ description: 'User register'})
   @Post('/register')
   async userRegister(@Body() registerUserDto: RegisterUserDto)
   {
     return await this.appService.userRegister(registerUserDto);
   }
 
+  @ApiTags('User')
+  @ApiOperation({ description: 'User activate'})
   @Post('/activate-user/:uuid/:userId')
   async activateUser(@Param('uuid') uuid: string, @Param('userId') userId: string)
   {
     return await this.appService.activateUser(uuid, userId);
   }
 
+  @ApiTags('User - Favourites')
+  @ApiOperation({ description: 'Add user favourite'})
   @Post("/favourite")
   async addFavourite(@Body() addFavouriteDto: AddFavouriteDto)
   {
     return await this.appService.addFavourite(addFavouriteDto);
   }
 
+  @ApiTags('User - Favourites')
+  @ApiOperation({ description: 'Get user favourites'})
   @Get("/favourite/:userId")
   async getFavourites(@Param('userId') userId: number)
   {
     return await this.appService.getFavourites(userId);
   }
 
+  @ApiTags('User - Favourites')
+  @ApiOperation({ description: 'Delete user favourites'})
   @Delete("/favourite/:userId")
   async deleteFavourites(
     @Param('userId') userId: number,
