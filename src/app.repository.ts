@@ -27,9 +27,9 @@ export class AppRepository {
     }
   }
 
-  async userRegister(registerUserDto: RegisterUserDto)
+  async isRegistered(registerUserDto: RegisterUserDto)
   {
-    const isExisting = await this.prismaService.users.findFirst({
+    return await this.prismaService.users.findFirst({
       where: {
         OR: [
           {email: registerUserDto.email},
@@ -37,21 +37,32 @@ export class AppRepository {
         ]
       },
     });
+  }
 
-    if (isExisting) {
-      throw new UnauthorizedException('Given data is already registered!');
-    }
-    else {
-      const registeredUser = await this.prismaService.users.create({
+  async userRegister(registerUserDto: RegisterUserDto, activationId: string)
+  {
+      return await this.prismaService.users.create({
         data: {
           username: registerUserDto.username,
           password: registerUserDto.password,
-          email: registerUserDto.email
+          email: registerUserDto.email,
+          activationId,
         }
       });
+  }
 
-      return registeredUser;
-    }
+  async activateUser(uuid: string, userId: string)
+  {
+    const idUser = parseInt(String(userId));
+    return await this.prismaService.users.updateMany({
+      where: {
+        id: idUser,
+        activationId: uuid
+      },
+      data: {
+        isActive: true
+      }
+    })
   }
 
   async addFavourite(addFavouriteDto: AddFavouriteDto)

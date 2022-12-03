@@ -15,6 +15,8 @@ model users {
   email    String @db.VarChar(320)
   password String
   username String @db.VarChar(240)
+  isActive Boolean @default(false)
+  activationId String?
 }
 
 model userFavorites {

@@ -27,6 +27,12 @@ export class AppController {
     return await this.appService.userRegister(registerUserDto);
   }
 
+  @Post('/activate-user/:uuid/:userId')
+  async activateUser(@Param('uuid') uuid: string, @Param('userId') userId: string)
+  {
+    return await this.appService.activateUser(uuid, userId);
+  }
+
   @Post("/favourite")
   async addFavourite(@Body() addFavouriteDto: AddFavouriteDto)
   {
