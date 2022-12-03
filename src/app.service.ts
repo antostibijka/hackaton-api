@@ -23,7 +23,7 @@ export class AppService {
     }
     else {
       const uuidRandom = uuidv4();
-      this.sendEmail(registerUserDto.email, uuidRandom);
+      await this.sendEmail(registerUserDto.email, uuidRandom);
         const data = await this.appRepository.userRegister(registerUserDto, uuidRandom);
         delete data.password;
         return {data, status: 'success'}
