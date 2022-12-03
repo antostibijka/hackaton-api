@@ -81,11 +81,15 @@ export class AppService {
   {
     if (await this.appRepository.checkToken(userId, token)) {
       const data = await this.appRepository.getFavourites(userId);
+      const ids = [];
       data.forEach(userFav => {
         delete userFav.userId;
         delete userFav.id;
+        ids.push(userFav.playerId)
       })
-      return {data, status: 'success'}
+      const queryParam = new URLSearchParams({ id: ids.toString() }).toString();
+      const userFavPlayers = await fetch('https://hackathon-api-2.onrender.com/data-science/api/players-bio/?' + queryParam + "/");
+      return {data, status: 'success', players: await userFavPlayers.json()}
     }
     else {
       throw new UnauthorizedException('Your token is invalid!');
