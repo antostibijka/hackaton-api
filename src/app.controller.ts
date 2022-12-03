@@ -33,9 +33,9 @@ export class AppController {
   @ApiTags('User')
   @ApiOperation({ description: 'User activate'})
   @Post('/activate-user/:uuid/:userId')
-  async activateUser(@Param('uuid') uuid: string, @Param('userId') userId: string)
+  async activateUser(@Param('uuid') uuid: string)
   {
-    return await this.appService.activateUser(uuid, userId);
+    return await this.appService.activateUser(uuid);
   }
 
   @ApiTags('User - Favourites')

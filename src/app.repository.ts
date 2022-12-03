@@ -46,12 +46,10 @@ export class AppRepository {
       });
   }
 
-  async activateUser(uuid: string, userId: string)
+  async activateUser(uuid: string)
   {
-    const idUser = parseInt(String(userId));
     return await this.prismaService.users.updateMany({
       where: {
-        id: idUser,
         activationId: uuid
       },
       data: {

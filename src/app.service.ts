@@ -27,13 +27,11 @@ export class AppService {
     if (isRegistered) {
       throw new UnauthorizedException('Given user is already registered!');
     }
-    else {
       const uuidRandom = uuidv4();
       await this.sendEmail(registerUserDto.email, uuidRandom);
         const data = await this.appRepository.userRegister(registerUserDto, uuidRandom);
         delete data.password;
         return {data, status: 'success'}
-    }
   }
 
   async sendEmail(email: string, uuidRandom: string)
@@ -54,9 +52,9 @@ export class AppService {
     }
   }
 
-  async activateUser(uuid: string, userId: string)
+  async activateUser(uuid: string)
   {
-    await this.appRepository.activateUser(uuid, userId);
+    await this.appRepository.activateUser(uuid);
   }
 
   async addFavourite(addFavouriteDto: AddFavouriteDto)
