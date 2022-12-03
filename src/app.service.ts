@@ -11,7 +11,9 @@ export class AppService {
   constructor(private readonly appRepository: AppRepository, private readonly mailerService: MailerService) {}
 
   async userLogin(loginUserDto: LoginUserDto) {
-    return this.appRepository.userLogin(loginUserDto);
+    const data = await this.appRepository.userLogin(loginUserDto);
+    delete data.data.isActive;
+    return data;
   }
 
   async userRegister(registerUserDto: RegisterUserDto) {

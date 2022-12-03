@@ -16,15 +16,18 @@ export class AppRepository {
       },
       select: {
         username: true,
-        email: true
+        email: true,
+        isActive: true
       }
     });
     if (!data) {
       throw new NotFoundException('Wrong username or password!');
     }
-    else {
-      return { data, status: 'success' };
+    if (data.isActive == false) {
+      throw new UnauthorizedException('User account is not active!');
     }
+
+    return { data, status: 'success' };
   }
 
   async isRegistered(registerUserDto: RegisterUserDto)

@@ -5,10 +5,12 @@ import { PrismaService } from "./prsima.service";
 import { AppRepository } from "./app.repository";
 import { MailerModule } from "@nestjs-modules/mailer";
 import { PugAdapter } from "@nestjs-modules/mailer/dist/adapters/pug.adapter";
+import { ConfigModule } from "@nestjs/config";
 
 @Module({
   imports:
     [
+      ConfigModule.forRoot(),
       MailerModule.forRootAsync({
         useFactory: () => ({
           transport: {
@@ -16,8 +18,8 @@ import { PugAdapter } from "@nestjs-modules/mailer/dist/adapters/pug.adapter";
             port: 587,
             secure: false,
             auth: {
-              user: 'silevishackaton@outlook.com',
-              pass: 'Mailer34211'
+              user: process.env.EMAIL_USER,
+              pass: process.env.EMAIL_PASS
             },
           },
           defaults: {
