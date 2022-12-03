@@ -24,3 +24,9 @@ model userFavorites {
   userId   Int
   playerId Int
 }
+
+model userToken {
+  id  Int  @id @default(autoincrement())
+  token String?
+  userId Int?
+}

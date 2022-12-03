@@ -19,7 +19,12 @@ export class AppService {
       throw new UnauthorizedException('User account is not active!');
     }
     delete data.isActive;
-    return { data, status: 'success' };
+    const token = uuidv4();
+    const tokenCreate = await this.appRepository.createUserToken(data.id, token)
+    if (tokenCreate)
+    {
+      return { data, status: 'success', token };
+    }
   }
 
   async userRegister(registerUserDto: RegisterUserDto) {
@@ -31,6 +36,7 @@ export class AppService {
       await this.sendEmail(registerUserDto.email, uuidRandom);
         const data = await this.appRepository.userRegister(registerUserDto, uuidRandom);
         delete data.password;
+        delete data.activationId;
         return {data, status: 'success'}
   }
 
@@ -54,26 +60,50 @@ export class AppService {
 
   async activateUser(uuid: string)
   {
-    await this.appRepository.activateUser(uuid);
+    const data = await this.appRepository.activateUser(uuid);
+    if (data)
+    {
+      return { status: 'success'};
+    }
   }
 
   async addFavourite(addFavouriteDto: AddFavouriteDto)
   {
-    return await this.appRepository.addFavourite(addFavouriteDto);
+    if (await this.appRepository.checkToken(addFavouriteDto.userId, addFavouriteDto.token)) {
+      return await this.appRepository.addFavourite(addFavouriteDto);
+    }
+    else {
+      throw new UnauthorizedException('Your token is invalid!');
+    }
   }
 
-  async getFavourites(userId: number)
+  async getFavourites(userId: number, token: string)
   {
-    const data = await this.appRepository.getFavourites(userId);
-    data.forEach(userFav => {
-      delete userFav.userId;
-      delete userFav.id;
-    })
-    return {data, status: 'success'}
+    if (await this.appRepository.checkToken(userId, token)) {
+      const data = await this.appRepository.getFavourites(userId);
+      data.forEach(userFav => {
+        delete userFav.userId;
+        delete userFav.id;
+      })
+      return {data, status: 'success'}
+    }
+    else {
+      throw new UnauthorizedException('Your token is invalid!');
+    }
   }
 
-  async deleteFavourite(userId: number, playerId: number)
+  async deleteFavourite(userId: number, playerId: number, token: string)
   {
-    return await this.appRepository.deleteFavourite(userId, playerId);
+    if (await this.appRepository.checkToken(userId, token)) {
+      return await this.appRepository.deleteFavourite(userId, playerId);
+    }
+    else {
+      throw new UnauthorizedException('Your token is invalid!');
+    }
+  }
+
+  async deleteToken(userId: number)
+  {
+    return await this.appRepository.deleteUserToken(userId);
   }
 }

@@ -12,4 +12,8 @@ export class AddFavouriteDto {
   @IsNotEmpty()
   @IsNumber()
   playerId: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  token: string;
 }

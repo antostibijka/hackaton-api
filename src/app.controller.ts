@@ -32,7 +32,7 @@ export class AppController {
 
   @ApiTags('User')
   @ApiOperation({ description: 'User activate'})
-  @Post('/activate-user/:uuid/:userId')
+  @Post('/activate-user/:uuid')
   async activateUser(@Param('uuid') uuid: string)
   {
     return await this.appService.activateUser(uuid);
@@ -49,9 +49,9 @@ export class AppController {
   @ApiTags('User - Favourites')
   @ApiOperation({ description: 'Get user favourites'})
   @Get("/favourite/:userId")
-  async getFavourites(@Param('userId') userId: number)
+  async getFavourites(@Param('userId') userId: number, @Body('token') token: string)
   {
-    return await this.appService.getFavourites(userId);
+    return await this.appService.getFavourites(userId, token);
   }
 
   @ApiTags('User - Favourites')
@@ -59,9 +59,18 @@ export class AppController {
   @Delete("/favourite/:userId")
   async deleteFavourites(
     @Param('userId') userId: number,
-    @Body('playerId') playerId: number
+    @Body('playerId') playerId: number,
+    @Body('token') token: string
     )
   {
-    return await this.appService.deleteFavourite(userId, playerId.valueOf());
+    return await this.appService.deleteFavourite(userId, playerId.valueOf(), token);
+  }
+
+  @ApiTags('User')
+  @ApiOperation({ description: 'Delete user token'})
+  @Delete("/token/:userId")
+  async deleteToken(@Param('userId') userId: number)
+  {
+    return await this.appService.deleteToken(userId);
   }
 }

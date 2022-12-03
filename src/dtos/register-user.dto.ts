@@ -10,8 +10,6 @@ export class RegisterUserDto {
 
   @ApiProperty({ default: 'password' })
   @IsNotEmpty()
-  @Length(8, 40)
-  @Matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,40}$/)
   password: string;
 
   @ApiProperty({ default: 'example@mail.com' })

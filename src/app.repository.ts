@@ -17,7 +17,8 @@ export class AppRepository {
       select: {
         username: true,
         email: true,
-        isActive: true
+        isActive: true,
+        id: true
       }
     });
   }
@@ -106,6 +107,39 @@ export class AppRepository {
     else {
       throw new NotFoundException("Not found user favourite with playerId: " + idPlayer);
     }
+  }
+
+  async createUserToken(userId: number, token: string)
+  {
+    const idUser = parseInt(String(userId));
+    return this.prismaService.userToken.create({
+      data: {
+        userId: idUser,
+        token,
+      }
+    });
+  }
+
+  async deleteUserToken(userId: number)
+  {
+    const idUser = parseInt(String(userId));
+    await this.prismaService.userToken.deleteMany({
+      where: {
+        userId: idUser,
+      }
+    });
+    return { status: "success" }
+  }
+
+  async checkToken(userId: number, token: string)
+  {
+    const idUser = parseInt(String(userId));
+    return this.prismaService.userToken.findFirst({
+      where: {
+        userId: idUser,
+        token,
+      }
+    });
 
   }
 }
